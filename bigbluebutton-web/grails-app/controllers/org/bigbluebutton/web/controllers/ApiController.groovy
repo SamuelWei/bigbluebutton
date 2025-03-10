@@ -1206,11 +1206,17 @@ class ApiController {
         String externalMeetingId = validationService.encodeString(meeting.getExternalId())
         String fullName = validationService.encodeString(us.fullname)
         ListHashMap<String, String> queryParameters = new ListHashMap<>();
-        queryParameters.put("fullName", fullName);
         queryParameters.put("meetingID", externalMeetingId);
         queryParameters.put("role", us.role.equals(ROLE_MODERATOR) ? ROLE_MODERATOR : ROLE_ATTENDEE);
         queryParameters.put("redirect", "true");
         queryParameters.put("existingUserID", us.getInternalUserId());
+        
+        if (us.role.equals(ROLE_MODERATOR) && !StringUtils.isEmpty(params.fullName)) {
+          queryParameters.put("fullName", params.fullName);
+        }
+        else{
+          queryParameters.put("fullName", fullName);
+        }
 
         // replaceSession: If this link is intended to replace the previous session of the user
         if (!StringUtils.isEmpty(params.replaceSession) && Boolean.parseBoolean(params.replaceSession)) {
