@@ -1209,7 +1209,10 @@ class ApiController {
         queryParameters.put("meetingID", externalMeetingId);
         queryParameters.put("role", us.role.equals(ROLE_MODERATOR) ? ROLE_MODERATOR : ROLE_ATTENDEE);
         queryParameters.put("redirect", "true");
-        queryParameters.put("existingUserID", us.getInternalUserId());
+
+        if (!us.role.equals(ROLE_MODERATOR) || StringUtils.isEmpty(params.duplicateSession) || Boolean.parseBoolean(params.duplicateSession)) {
+          queryParameters.put("existingUserID", us.getInternalUserId());
+        }
         
         if (us.role.equals(ROLE_MODERATOR) && !StringUtils.isEmpty(params.fullName)) {
           queryParameters.put("fullName", params.fullName);
